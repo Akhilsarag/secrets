@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+
+<h2 class="mb-4">Submit a Secret</h2>
+<form action="/submit" method="post" class="w-50 mx-auto">
+    <div class="mb-3">
+        <textarea name="secret" class="form-control" placeholder="Write your secret..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-warning w-100">Submit</button>
+</form>
+
+<%- include('partials/footer') %>
