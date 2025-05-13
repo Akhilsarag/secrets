@@ -11,7 +11,7 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/secrets');
+mongoose.connect('mongodb+srv://user3:Akhil1234@cluster0.c9dkcry.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
 
 const trySchema = new mongoose.Schema({
     email: String,
@@ -96,7 +96,7 @@ app.get('/secrets', authenticateToken, (req, res) => {
 
 app.get('/logout', (req, res) => {
     res.clearCookie('token');
-    res.redirect('/logout');
+    res.redirect('/');
 });
 
 app.listen(3000, () => {
