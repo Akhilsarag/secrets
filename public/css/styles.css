@@ -1,26 +1,88 @@
-body{
-    background-color: #ebecef;
+/* Global body style */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #ece9e6, #ffffff);
+    color: #333;
 }
 
-.centered{
-     padding-top: 200px;
-     text-align: center;
-}
-
-.secret-text{
+/* Center content vertically and horizontally */
+.centered {
+    padding-top: 100px;
     text-align: center;
-    font-size: 2rem;
-    color: #fff;
-    background-color: #fff;
 }
 
+/* Secret text card styling */
+.secret-text {
+    max-width: 600px;
+    margin: 20px auto;
+    font-size: 1.5rem;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #f7f7f7;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 
+/* Form styling */
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+}
 
+/* Form inputs */
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
 
+/* Buttons */
+button, input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
+button:hover,
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
 
+/* Headings */
+h1, h2, h3 {
+    text-align: center;
+    color: #444;
+}
 
+/* Secret page title */
+.secret-title {
+    font-size: 2.5rem;
+    color: #222;
+    margin-bottom: 20px;
+}
 
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .secret-text {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
 
-
-
+    form {
+        padding: 20px;
+    }
+}
