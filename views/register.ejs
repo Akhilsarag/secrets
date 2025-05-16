@@ -3,7 +3,14 @@
 <h2 class="mb-4">Register</h2>
 <form action="/register" method="post" class="w-50 mx-auto">
     <div class="mb-3">
-        <input type="email" name="email" class="form-control" placeholder="Email" required>
+        <input 
+            type="email" 
+            name="email" 
+            class="form-control" 
+            placeholder="Email" 
+            required
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            title="Enter a valid email address (e.g. example@domain.com)">
     </div>
     <div class="mb-3">
         <input 

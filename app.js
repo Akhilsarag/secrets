@@ -13,18 +13,22 @@ app.use(cookieParser());
 
 mongoose.connect('mongodb+srv://user3:Akhil1234@cluster0.c9dkcry.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
 
+// Schema
 const trySchema = new mongoose.Schema({
     email: String,
     password: String,
     secrets: [{ content: String }]
 });
 
+// Secret Keys
 const secretKey = 'Thisislittlesecret.';
 const jwtSecret = 'jwtSuperSecretKey';
 
+// Encryption
 trySchema.plugin(encrypt, { secret: secretKey, encryptedFields: ['password'] });
 const User = mongoose.model('User', trySchema);
 
+// JWT Middleware
 function authenticateToken(req, res, next) {
     const token = req.cookies.token;
     if (!token) return res.redirect('/login');
@@ -36,13 +40,19 @@ function authenticateToken(req, res, next) {
     });
 }
 
-// ✅ Password validation function
+// ✅ Password validation
 function isStrongPassword(password) {
-    // At least 8 characters, one uppercase, one lowercase, one number, and one special character
     const strongRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/;
     return strongRegex.test(password);
 }
 
+// ✅ Email validation
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Routes
 app.get('/', (req, res) => {
     res.render('home');
 });
@@ -52,18 +62,17 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
 
-    // ✅ Check password format
+    if (!isValidEmail(email)) {
+        return res.send('Invalid email format.');
+    }
+
     if (!isStrongPassword(password)) {
         return res.send('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
     }
 
-    const newUser = new User({
-        email,
-        password
-    });
+    const newUser = new User({ email, password });
 
     try {
         await newUser.save();
@@ -79,16 +88,14 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
 
     try {
         const foundUser = await User.findOne({ email });
         if (!foundUser) return res.send('No user found with this email');
 
         if (foundUser.password === password) {
-            const userPayload = { email: foundUser.email };
-            const token = jwt.sign(userPayload, jwtSecret, { expiresIn: '1h' });
+            const token = jwt.sign({ email: foundUser.email }, jwtSecret, { expiresIn: '1h' });
             res.cookie('token', token, { httpOnly: true });
             res.redirect('/secrets');
         } else {
@@ -131,12 +138,11 @@ app.post('/submit', authenticateToken, async (req, res) => {
 });
 
 app.post('/edit', authenticateToken, async (req, res) => {
-    const secretId = req.body.id;
-    const newContent = req.body.newContent;
+    const { id, newContent } = req.body;
 
     try {
         const user = await User.findOne({ email: req.user.email });
-        const secret = user.secrets.id(secretId);
+        const secret = user.secrets.id(id);
         if (secret) {
             secret.content = newContent;
             await user.save();
