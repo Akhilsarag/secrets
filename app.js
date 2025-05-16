@@ -36,6 +36,13 @@ function authenticateToken(req, res, next) {
     });
 }
 
+// ✅ Password validation function
+function isStrongPassword(password) {
+    // At least 8 characters, one uppercase, one lowercase, one number, and one special character
+    const strongRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/;
+    return strongRegex.test(password);
+}
+
 app.get('/', (req, res) => {
     res.render('home');
 });
@@ -45,9 +52,17 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // ✅ Check password format
+    if (!isStrongPassword(password)) {
+        return res.send('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
+    }
+
     const newUser = new User({
-        email: req.body.email,
-        password: req.body.password
+        email,
+        password
     });
 
     try {

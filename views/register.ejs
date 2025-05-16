@@ -6,7 +6,14 @@
         <input type="email" name="email" class="form-control" placeholder="Email" required>
     </div>
     <div class="mb-3">
-        <input type="password" name="password" class="form-control" placeholder="Password" required>
+        <input 
+            type="password" 
+            name="password" 
+            class="form-control" 
+            placeholder="Password" 
+            required
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}" 
+            title="Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.">
     </div>
     <button type="submit" class="btn btn-success w-100">Register</button>
 </form>
