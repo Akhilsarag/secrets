@@ -11,28 +11,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
+// MongoDB connection
 mongoose.connect('mongodb+srv://user3:Akhil1234@cluster0.c9dkcry.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
 
-// Schema
+// Schema and Encryption
 const trySchema = new mongoose.Schema({
     email: String,
     password: String,
     secrets: [{ content: String }]
 });
-
-// Secret Keys
 const secretKey = 'Thisislittlesecret.';
 const jwtSecret = 'jwtSuperSecretKey';
 
-// Encryption
 trySchema.plugin(encrypt, { secret: secretKey, encryptedFields: ['password'] });
 const User = mongoose.model('User', trySchema);
 
-// JWT Middleware
+// Middleware to protect routes
 function authenticateToken(req, res, next) {
     const token = req.cookies.token;
     if (!token) return res.redirect('/login');
-
     jwt.verify(token, jwtSecret, (err, user) => {
         if (err) return res.redirect('/login');
         req.user = user;
@@ -40,13 +37,12 @@ function authenticateToken(req, res, next) {
     });
 }
 
-// ✅ Password validation
+// Validation functions
 function isStrongPassword(password) {
     const strongRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/;
     return strongRegex.test(password);
 }
 
-// ✅ Email validation
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -83,8 +79,9 @@ app.post('/register', async (req, res) => {
     }
 });
 
+// ✅ LOGIN: Send error messages to login page and preserve email
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', { error: null, email: '' });
 });
 
 app.post('/login', async (req, res) => {
@@ -92,18 +89,22 @@ app.post('/login', async (req, res) => {
 
     try {
         const foundUser = await User.findOne({ email });
-        if (!foundUser) return res.send('No user found with this email');
 
-        if (foundUser.password === password) {
-            const token = jwt.sign({ email: foundUser.email }, jwtSecret, { expiresIn: '1h' });
-            res.cookie('token', token, { httpOnly: true });
-            res.redirect('/secrets');
-        } else {
-            res.send('Incorrect password');
+        if (!foundUser) {
+            return res.render('login', { error: 'Email not found. Please register first.', email });
         }
+
+        if (foundUser.password !== password) {
+            return res.render('login', { error: 'Incorrect password. Please try again.', email });
+        }
+
+        const token = jwt.sign({ email: foundUser.email }, jwtSecret, { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true });
+        res.redirect('/secrets');
+
     } catch (err) {
         console.log(err);
-        res.redirect('/login');
+        res.render('login', { error: 'Something went wrong. Please try again.', email });
     }
 });
 
