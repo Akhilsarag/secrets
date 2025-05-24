@@ -1,6 +1,13 @@
 <%- include('partials/header') %>
 
-<h2 class="mb-4">Register</h2>
+<h2 class="mb-4 text-center">Register</h2>
+
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger text-center" role="alert">
+    <%= error %>
+  </div>
+<% } %>
+
 <form action="/register" method="post" class="w-50 mx-auto">
     <div class="mb-3">
         <input 

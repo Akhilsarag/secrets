@@ -54,18 +54,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.render('register');
+    res.render('register', { error: null });
 });
 
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
 
     if (!isValidEmail(email)) {
-        return res.send('Invalid email format.');
+        return res.render('register', { error: 'Enter a valid email address (e.g. example@domain.com).' });
     }
 
     if (!isStrongPassword(password)) {
-        return res.send('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
+        return res.render('register', { error: 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.' });
     }
 
     const newUser = new User({ email, password });
@@ -75,11 +75,10 @@ app.post('/register', async (req, res) => {
         res.redirect('/login');
     } catch (err) {
         console.log(err);
-        res.redirect('/register');
+        res.render('register', { error: 'Something went wrong. Please try again.' });
     }
 });
 
-// ✅ LOGIN: Send error messages to login page and preserve email
 app.get('/login', (req, res) => {
     res.render('login', { error: null, email: '' });
 });
