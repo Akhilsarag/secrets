@@ -1,29 +1,43 @@
 <%- include('partials/header') %>
 
-  <h2 class="mb-4 text-center">Register</h2>
+<h2 class="mb-4 text-center">Register</h2>
 
-  <% if (typeof error !=='undefined' && error) { %>
-    <div class="alert alert-danger text-center" role="alert">
-      <%= error %>
-    </div>
-    <% } %>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger text-center" role="alert">
+    <%= error %>
+  </div>
+<% } %>
 
-      <form action="/register" method="post" class="w-50 mx-auto">
-        <div class="mb-3">
-          <input type="email" name="email" class="form-control" placeholder="Email" required
-            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-            title="Enter a valid email address (e.g. example@domain.com)">
-        </div>
-        <div class="mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}"
-            title="Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.">
-        </div>
-        <button type="submit" class="btn btn-success w-100">Register</button>
-      </form>
-      <p class="text-center mt-3">
-        Already registered?
-        <a href="/login" class="text-decoration-none fw-bold">Login</a>
-      </p>
+<form action="/register" method="post" class="w-50 mx-auto">
+  <div class="mb-3">
+    <input type="email" name="email" class="form-control" placeholder="Email" required
+      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+      title="Enter a valid email address (e.g. example@domain.com)">
+  </div>
+  <div class="mb-3">
+    <input type="password" id="registerPassword" name="password" class="form-control" placeholder="Password" required
+      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}"
+      title="Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.">
+  </div>
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" onclick="togglePassword('registerPassword')" id="showRegisterPassword">
+    <label class="form-check-label" for="showRegisterPassword">
+      Show Password
+    </label>
+  </div>
+  <button type="submit" class="btn btn-success w-100">Register</button>
+</form>
 
-      <%- include('partials/footer') %>
+<p class="text-center mt-3">
+  Already registered?
+  <a href="/login" class="text-decoration-none fw-bold">Login</a>
+</p>
+
+<script>
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+  }
+</script>
+
+<%- include('partials/footer') %>

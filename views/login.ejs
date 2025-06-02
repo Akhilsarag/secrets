@@ -2,33 +2,45 @@
 
 <h2 class="mb-4 text-center">Login</h2>
 
-<!-- Error Message -->
 <% if (error) { %>
   <div class="alert alert-danger text-center w-50 mx-auto">
     <%= error %>
   </div>
 <% } %>
 
-<!-- Login Form -->
 <form action="/login" method="post" class="w-50 mx-auto mt-3">
-    <div class="mb-3">
-        <input 
-            type="email" 
-            name="email" 
-            class="form-control" 
-            placeholder="Email" 
-            required 
-            value="<%= typeof email !== 'undefined' ? email : '' %>">
-    </div>
-    <div class="mb-3">
-        <input 
-            type="password" 
-            name="password" 
-            class="form-control" 
-            placeholder="Password" 
-            required>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Login</button>
+  <div class="mb-3">
+    <input 
+      type="email" 
+      name="email" 
+      class="form-control" 
+      placeholder="Email" 
+      required 
+      value="<%= typeof email !== 'undefined' ? email : '' %>">
+  </div>
+  <div class="mb-3">
+    <input 
+      type="password" 
+      name="password" 
+      id="loginPassword" 
+      class="form-control" 
+      placeholder="Password" 
+      required>
+  </div>
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" onclick="togglePassword('loginPassword')" id="showLoginPassword">
+    <label class="form-check-label" for="showLoginPassword">
+      Show Password
+    </label>
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Login</button>
 </form>
+
+<script>
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+  }
+</script>
 
 <%- include('partials/footer') %>
